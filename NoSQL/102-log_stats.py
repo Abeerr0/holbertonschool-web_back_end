@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""102-log_stats.py"""
+"""Script that provides stats and top IPs about Nginx logs."""
 from pymongo import MongoClient
+
 
 if __name__ == "__main__":
     client = MongoClient('mongodb://127.0.0.1:27017')
