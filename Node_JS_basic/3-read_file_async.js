@@ -1,49 +1,46 @@
-// read file asynchronously and return a Promise
+// Task 3: Read CSV file asynchronously returning a Promise
 const fs = require('fs');
 
 function countStudents(path) {
   return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
+    fs.readFile(path, 'utf-8', (err, data) => {
       if (err) {
         reject(new Error('Cannot load the database'));
         return;
       }
 
-      // filter out empty lines
-      const lines = data.split('\n').filter((line) => line.trim().length > 0);
+      const lines = data.split('\n').filter((line) => line.trim() !== '');
       if (lines.length <= 1) {
         console.log('Number of students: 0');
-        resolve('Number of students: 0');
+        resolve();
         return;
       }
 
-      const studentRows = lines.slice(1);
-      const output = [];
-      const totalMsg = `Number of students: ${studentRows.length}`;
-      console.log(totalMsg);
-      output.push(totalMsg);
-
+      const students = lines.slice(1);
       const fields = {};
-      for (const row of studentRows) {
-        const student = row.split(',');
-        if (student.length >= 4) {
-          const firstName = student[0].trim();
-          const field = student[student.length - 1].trim();
+      let totalStudents = 0;
 
-          if (!fields[field]) {
-            fields[field] = [];
+      students.forEach((line) => {
+        const parts = line.split(',');
+        if (parts.length >= 4) {
+          const firstname = parts[0].trim();
+          const field = parts[3].trim();
+
+          if (firstname && field) {
+            if (!fields[field]) {
+              fields[field] = [];
+            }
+            fields[field].push(firstname);
+            totalStudents += 1;
           }
-          fields[field].push(firstName);
         }
-      }
+      });
 
-      for (const [field, list] of Object.entries(fields)) {
-        const fieldMsg = `Number of students in ${field}: ${list.length}. List: ${list.join(', ')}`;
-        console.log(fieldMsg);
-        output.push(fieldMsg);
+      console.log(`Number of students: ${totalStudents}`);
+      for (const [field, names] of Object.entries(fields)) {
+        console.log(`Number of students in ${field}: ${names.length}. List: ${names.join(', ')}`);
       }
-
-      resolve(output.join('\n'));
+      resolve();
     });
   });
 }

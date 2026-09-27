@@ -1,4 +1,3 @@
-// create an HTTP server using Express
 const express = require('express');
 
 const app = express();
@@ -8,8 +7,6 @@ app.get('/', (req, res) => {
   res.send('Hello Holberton School!');
 });
 
-app.listen(port, () => {
-  // server listening
-});
+app.listen(port);
 
 module.exports = app;
